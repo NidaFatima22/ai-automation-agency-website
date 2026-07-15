@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<!-- SUPABASE JS LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --paper:#F8F6F1;
@@ -735,486 +737,187 @@
         </div>
         <div class="service-card reveal-card" style="transition-delay:.1s;">
           <span class="service-index">02</span>
-          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-          <h3>Chatbot Building</h3>
-          <p>Custom AI chatbots that answer customer questions, qualify leads, and hand off to your team only when it matters.</p>
-        </div>
-        <div class="service-card reveal-card" style="transition-delay:.2s;">
-          <span class="service-index">03</span>
-          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
-          <h3>AI Integration</h3>
-          <p>We embed AI directly into the tools you already use — your CRM, inbox, or internal dashboards — so it fits your workflow.</p>
-        </div>
-        <div class="service-card reveal-card" style="transition-delay:.3s;">
-          <span class="service-index">04</span>
-          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
-          <h3>Lead Generation Automation</h3>
-          <p>From first click to qualified lead in your inbox — automated capture, scoring, and follow-up that never sleeps.</p>
+          <div class="service-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <h3>AI Chatbots</h3>
+          <p>Support your customers, triage tickets, and qualify leads on autopilot using contextual custom-trained bots.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="section-divider" aria-hidden="true"></div>
-    <div class="wrap about-grid-full">
-      <div class="about-copy reveal" style="text-align:center; max-width:760px; margin:0 auto;">
-        <span class="eyebrow" style="justify-content:center;">About us</span>
-        <h2 style="margin-top:14px; font-size:clamp(28px,4vw,42px);">We build the systems, <span class="hl">not just the advice.</span></h2>
-        <p style="max-width:640px; margin:16px auto 0;">Nida AI Agency helps small and mid-sized businesses put AI to work on the tasks that quietly eat up their week. We don't hand you a strategy deck — we design, build, and hand over working automations, chatbots, and integrations tailored to how your team already operates. No bloated software, no long onboarding — just fewer repetitive tasks and more time for the work that actually needs a human.</p>
-        <div class="about-stats">
-          <div class="stat reveal-stat reveal-stat-1">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            <div><b>15+</b><span>Businesses automated</span></div>
-          </div>
-          <div class="stat reveal-stat reveal-stat-2">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-            <div><b>4–7 days</b><span>Typical turnaround</span></div>
-          </div>
-          <div class="stat reveal-stat reveal-stat-3">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/></svg></div>
-            <div><b>3</b><span>Core tools you keep using</span></div>
-          </div>
-          <div class="stat reveal-stat reveal-stat-4">
-            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-            <div><b>100%</b><span>Built around your workflow</span></div>
-          </div>
-        </div>
-        <div style="margin-top:36px;">
-          <a href="#contact" class="btn btn-primary cta-pulse-btn js-audit-cta">Book your free audit</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section class="faq" id="faq">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="eyebrow">Questions</span>
-        <h2>Before you reach out</h2>
-      </div>
-      <div class="faq-list" id="faqList">
-        <div class="faq-item open reveal-faq reveal-faq-1">
-          <button class="faq-q" aria-expanded="true">How long does a typical project take? <span class="plus">+</span></button>
-          <div class="faq-a" style="max-height:200px;"><p>Most workflow automations and chatbots are live within 4–7 days. Larger integrations with multiple systems can take 2–3 weeks — we'll give you a clear timeline after the first call.</p></div>
-        </div>
-        <div class="faq-item reveal-faq reveal-faq-2">
-          <button class="faq-q" aria-expanded="false">Do we need technical staff to maintain this? <span class="plus">+</span></button>
-          <div class="faq-a"><p>No. We build automations to run on their own, and we hand over simple documentation so your team can make small changes without touching code.</p></div>
-        </div>
-        <div class="faq-item reveal-faq reveal-faq-3">
-          <button class="faq-q" aria-expanded="false">What tools do you work with? <span class="plus">+</span></button>
-          <div class="faq-a"><p>We integrate with the tools you already use — common CRMs, spreadsheets, email platforms, and messaging apps like WhatsApp and Slack — rather than asking you to switch.</p></div>
-        </div>
-        <div class="faq-item reveal-faq reveal-faq-4">
-          <button class="faq-q" aria-expanded="false">How much does it cost? <span class="plus">+</span></button>
-          <div class="faq-a"><p>Pricing depends on scope — a single chatbot costs less than a full multi-system integration. Tell us what you want to automate on the call and we'll give you a fixed quote.</p></div>
-        </div>
-        <div class="faq-item reveal-faq reveal-faq-5">
-          <button class="faq-q" aria-expanded="false">What if the automation breaks or needs a change later? <span class="plus">+</span></button>
-          <div class="faq-a"><p>Every project includes a support window after launch, and ongoing maintenance plans are available if you'd rather we handle changes for you.</p></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA -->
-  <section>
-    <div class="cta-band reveal-cta">
-      <span class="eyebrow">Ready when you are</span>
-      <h2>Let's automate your first workflow.</h2>
-      <p>Book a free 20-minute audit — we'll show you exactly where AI can save your team time this month.</p>
-      <div class="cta-actions">
-        <a href="#contact" class="btn btn-dark cta-pulse-btn js-audit-cta" style="background:var(--amber); color:#fff;">Book your free audit</a>
-        <a href="#services" class="btn btn-ghost" style="border-color:rgba(255,255,255,.25); color:#fff;">See our services</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="section-divider" aria-hidden="true"></div>
+  <!-- CONTACT SECTION -->
+  <section class="contact" id="contact">
     <div class="wrap contact-grid">
       <div class="contact-info reveal-left">
         <span class="eyebrow">Get in touch</span>
-        <h2>Tell us what's eating your team's time.</h2>
-        <p>Fill out the form and we'll get back to you within one business day with next steps.</p>
-        <ul class="contact-list">
-          <li><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span><span><b>Email</b>hello@nidaaiagency.com</span></li>
-          <li><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><span><b>Response</b>Within 1 business day</span></li>
-          <li><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span><b>Based in</b>Pakistan — working with clients worldwide</span></li>
-        </ul>
+        <h2>Let's discuss details</h2>
+        <p>Drop your project information here. All details automatically sync securely to our pipeline CRM database.</p>
       </div>
 
-      <div>
-        <form id="leadForm" class="reveal-form">
+      <div class="reveal-form">
+        <form id="leadForm">
           <div class="field-row">
             <div class="field">
-              <label for="fullName">Full name</label>
-              <input type="text" id="fullName" name="fullName" required>
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" name="fullName" required placeholder="John Doe">
             </div>
             <div class="field">
-              <label for="email">Email address</label>
-              <input type="email" id="email" name="email" required>
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" required placeholder="john@example.com">
             </div>
           </div>
+
           <div class="field-row">
             <div class="field">
-              <label for="phone">Phone number</label>
-              <input type="tel" id="phone" name="phone" required>
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="+1 (555) 000-0000">
             </div>
             <div class="field">
-              <label for="company">Company name</label>
-              <input type="text" id="company" name="company">
+              <label for="company">Company Name</label>
+              <input type="text" id="company" name="company" placeholder="Acme Corp">
             </div>
           </div>
+
           <div class="field-row">
-            <div class="field full">
+            <div class="field">
               <label for="automate">What do you want to automate?</label>
               <select id="automate" name="automate">
-                <option>Workflow automation</option>
-                <option>Chatbot building</option>
-                <option>AI integration</option>
-                <option>Lead generation automation</option>
-                <option>Not sure yet</option>
+                <option value="workflow">Workflow Integrations</option>
+                <option value="chatbots">AI Chatbots &amp; Agents</option>
+                <option value="custom">Custom Internal Tools</option>
+                <option value="other">Something else</option>
               </select>
             </div>
-          </div>
-          <div class="field-row">
-            <div class="field full">
-              <label for="budget">Budget range (optional)</label>
+            <div class="field">
+              <label for="budget">Approximate Budget</label>
               <select id="budget" name="budget">
-                <option value="">Prefer not to say</option>
-                <option>Under $500</option>
-                <option>$500 – $2,000</option>
-                <option>$2,000 – $5,000</option>
-                <option>$5,000+</option>
+                <option value="under-1k">Under $1,000</option>
+                <option value="1k-5k">$1,000 - $5,000</option>
+                <option value="5k-10k">$5,000 - $10,000</option>
+                <option value="10k-plus">$10,000+</option>
               </select>
             </div>
           </div>
-          <div class="field-row">
-            <div class="field full">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" placeholder="Tell us a bit about your team and what's taking up the most time..."></textarea>
-            </div>
+
+          <div class="field full">
+            <label for="message">Project Description / Message</label>
+            <textarea id="message" name="message" required placeholder="Tell us about the processes dragging your productivity down..."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" id="submitBtn">Send message</button>
-          <p id="formStatus" style="display:none; color:#B3261E; font-size:13.5px; margin:10px 2px 0;"></p>
+
+          <button type="submit" class="btn btn-primary" id="submitBtn">
+            <span id="btnText">Submit Information</span>
+          </button>
         </form>
-        <div class="thankyou" id="thankYou">
+
+        <div class="thankyou" id="thankYouScreen">
           <div class="service-icon">✓</div>
-          <h3 style="font-size:20px; margin-bottom:8px;">Thanks — message received.</h3>
-          <p style="color:var(--ink-soft); font-size:15px;">We'll get back to you within one business day. Talk soon.</p>
+          <h3>Thank you, Lead Registered!</h3>
+          <p>Your details were saved successfully to Supabase. We will review your answers and be in touch in less than 24 hours.</p>
         </div>
       </div>
     </div>
   </section>
-
 </main>
 
 <footer>
   <div class="wrap">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <a href="#top" class="logo"><svg class="logo-mark" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 5v14" stroke="rgba(255,255,255,.92)" stroke-width="2.5" stroke-linecap="round"/><path d="M7 5l10 14" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round"/><path d="M17 5v14" stroke="rgba(255,255,255,.92)" stroke-width="2.5" stroke-linecap="round"/></svg><span class="logo-primary">Nida</span> <span class="logo-secondary">AI Agency</span></a>
-        <p>We design and build AI workflows, chatbots, and integrations that take repetitive work off your team's plate.</p>
-      </div>
-      <div class="footer-col">
-        <h4>Navigate</h4>
-        <ul>
-          <li><a href="#services">Services</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#faq">FAQ</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Services</h4>
-        <ul>
-          <li><a href="#services">Workflow Automation</a></li>
-          <li><a href="#services">Chatbot Building</a></li>
-          <li><a href="#services">AI Integration</a></li>
-          <li><a href="#services">Lead Generation</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Contact</h4>
-        <ul>
-          <li><a href="mailto:hello@nidaaiagency.com">hello@nidaaiagency.com</a></li>
-          <li><a href="#contact" class="js-audit-cta">Book a free audit</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-row reveal">
-      <p>© 2026 Nida AI Agency. All rights reserved.</p>
-      <div class="footer-social">
-        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
-        <a href="#" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4l-14 16M4 4l14 16"/></svg></a>
-      </div>
+    <div class="footer-row">
+      <p>&copy; 2026 Nida AI Agency. All rights reserved.</p>
     </div>
   </div>
 </footer>
 
-<div class="audit-modal-overlay" id="auditModalOverlay">
-  <div class="audit-modal" role="dialog" aria-modal="true" aria-labelledby="auditModalTitle">
-    <button class="audit-modal-close" id="auditModalClose" aria-label="Close">✕</button>
-    <span class="eyebrow">How booking works</span>
-    <h3 id="auditModalTitle">Your free audit in 3 steps</h3>
-    <ul class="audit-steps">
-      <li>
-        <span class="audit-step-num">1</span>
-        <div>
-          <b>Tell us about your business</b>
-          <p>60-second form — what you do and what's eating your team's time.</p>
-        </div>
-      </li>
-      <li>
-        <span class="audit-step-num">2</span>
-        <div>
-          <b>We review it</b>
-          <p>We look at your workflow and reply within 1 business day.</p>
-        </div>
-      </li>
-      <li>
-        <span class="audit-step-num">3</span>
-        <div>
-          <b>Free 20-minute audit call</b>
-          <p>We show you exactly where AI can save your team time — no pitch, just a plan.</p>
-        </div>
-      </li>
-    </ul>
-    <button class="btn btn-primary" id="auditModalContinue" style="width:100%; justify-content:center;">Start — fill the form</button>
-  </div>
-</div>
-
-<button id="backToTop" aria-label="Back to top">↑</button>
-
 <script>
-  // "Book your free audit" CTAs open a quick 3-step process modal first,
-  // then continue down to the form and focus its first field.
-  const auditOverlay = document.getElementById('auditModalOverlay');
-  const auditClose = document.getElementById('auditModalClose');
-  const auditContinue = document.getElementById('auditModalContinue');
+  // SUPABASE CONFIGURATION
+  const SUPABASE_URL = "https://sevjwxcqckzzrywgnhhg.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_K3aGEzlYRC7bS2HuCHek8w_KYDBdHTY";
 
-  function openAuditModal(e) {
-    e.preventDefault();
-    auditOverlay.classList.add('open');
-  }
-  function closeAuditModal() {
-    auditOverlay.classList.remove('open');
-  }
-  function goToForm() {
-    closeAuditModal();
-    document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setTimeout(() => {
-      const nameField = document.getElementById('fullName');
-      if (nameField) nameField.focus({ preventScroll: true });
-    }, 500);
-  }
+  // Fixed instance variable mapping to avoid browser conflicts
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  document.querySelectorAll('.js-audit-cta').forEach(link => {
-    link.addEventListener('click', openAuditModal);
-  });
-  auditClose.addEventListener('click', closeAuditModal);
-  auditContinue.addEventListener('click', goToForm);
-  auditOverlay.addEventListener('click', (e) => {
-    if (e.target === auditOverlay) closeAuditModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && auditOverlay.classList.contains('open')) closeAuditModal();
-  });
+  // FORM HANDLING
+  const leadForm = document.getElementById('leadForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const thankYouScreen = document.getElementById('thankYouScreen');
 
-  // Other #contact links (nav "Get a quote", footer links, etc.) still jump
-  // straight to the form and focus it.
-  document.querySelectorAll('a[href="#contact"]:not(.js-audit-cta)').forEach(link => {
-    link.addEventListener('click', () => {
-      setTimeout(() => {
-        const nameField = document.getElementById('fullName');
-        if (nameField) nameField.focus({ preventScroll: true });
-      }, 500);
+  if (leadForm) {
+    leadForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      // Change button text to loader state
+      submitBtn.disabled = true;
+      btnText.innerHTML = '<span class="spinner"></span> Processing...';
+
+      // Capture input values exactly matching your Leads table columns
+      const leadData = {
+        fullName: document.getElementById('fullName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        company: document.getElementById('company').value,
+        automate: document.getElementById('automate').value,
+        budget: document.getElementById('budget').value,
+        message: document.getElementById('message').value
+      };
+
+      try {
+        // Submit payload directly to Supabase
+        const { data, error } = await supabaseClient
+          .from('Leads')
+          .insert([leadData]);
+
+        if (error) {
+          throw error;
+        }
+
+        // Handle success display transitions
+        leadForm.classList.add('fade-out');
+        setTimeout(() => {
+          leadForm.style.display = 'none';
+          thankYouScreen.classList.add('show');
+        }, 300);
+
+      } catch (err) {
+        console.error('Database connection error:', err);
+        alert('Oops! There was an issue saving your data: ' + err.message);
+        
+        // Reset submit button state
+        submitBtn.disabled = false;
+        btnText.innerHTML = 'Submit Information';
+      }
     });
+  }
+
+  // Header Scroll State and Simple Progress Bar
+  const header = document.querySelector('header');
+  const progress = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const current = window.scrollY;
+    if (total > 0 && progress) {
+      progress.style.width = `${(current / total) * 100}%`;
+    }
+    if (current > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
   });
 
-  // Mobile nav toggle
+  // Basic mobile navigation toggler
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
-  navToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    navToggle.setAttribute('aria-expanded', isOpen);
-  });
-  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    navLinks.classList.remove('open');
-    navToggle.setAttribute('aria-expanded', 'false');
-  }));
-
-  // Header scroll state + progress bar + back to top
-  const header = document.querySelector('header');
-  const scrollProgress = document.getElementById('scrollProgress');
-  const backToTop = document.getElementById('backToTop');
-
-  function onScroll() {
-    header.classList.toggle('scrolled', window.scrollY > 40);
-
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
-    scrollProgress.style.width = pct + '%';
-
-    backToTop.classList.toggle('visible', window.scrollY > 500);
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // Scroll reveal (handles .reveal, .reveal-card, .reveal-stat, .reveal-right, .reveal-faq, .reveal-cta, .reveal-left, .reveal-form)
-  const revealSelectors = '.reveal, .reveal-card, .reveal-stat, .reveal-right, .reveal-faq, .reveal-cta, .reveal-left, .reveal-form';
-  const revealEls = document.querySelectorAll(revealSelectors);
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    revealEls.forEach(el => el.classList.add('revealed'));
-  } else {
-    const revealObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('revealed');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.15 });
-    revealEls.forEach(el => revealObserver.observe(el));
-  }
-
-  // Animated counters for hero-proof and about-stats
-  function animateCount(el, target, suffix, duration) {
-    const start = performance.now();
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      const value = Math.floor(progress * target);
-      el.textContent = value + suffix;
-      if (progress < 1) requestAnimationFrame(tick);
-      else el.textContent = target + suffix;
-    }
-    requestAnimationFrame(tick);
-  }
-
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    // Hero "40+ hrs" counter
-    const heroProof = document.querySelector('.hero-proof');
-    if (heroProof) {
-      const firstStat = heroProof.querySelector('div:first-child b');
-      if (firstStat) {
-        setTimeout(() => animateCount(firstStat, 40, '+ hrs', 1200), 700);
-      }
-    }
-
-    // About stats counters, triggered on scroll into view
-    const statObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const b = entry.target.querySelector('b');
-          const text = b.textContent.trim();
-          if (text === '15+') animateCount(b, 15, '+', 1200);
-          else if (text === '3') animateCount(b, 3, '', 1200);
-          else if (text === '100%') animateCount(b, 100, '%', 1200);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4 });
-    document.querySelectorAll('.about-stats .stat').forEach(el => statObserver.observe(el));
-  }
-
-  // FAQ accordion
-  document.querySelectorAll('.faq-item').forEach(item => {
-    const btn = item.querySelector('.faq-q');
-    const answer = item.querySelector('.faq-a');
-    btn.addEventListener('click', () => {
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i => {
-        i.classList.remove('open');
-        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
-        i.querySelector('.faq-a').style.maxHeight = null;
-      });
-      if (!isOpen) {
-        item.classList.add('open');
-        btn.setAttribute('aria-expanded', 'true');
-        answer.style.maxHeight = answer.scrollHeight + 'px';
-      }
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+      navToggle.setAttribute('aria-expanded', !isExpanded);
+      navLinks.classList.toggle('open');
     });
-  });
-
-  // ===== EmailJS setup =====
-  // 1. Create a free account at https://www.emailjs.com
-  // 2. Add an Email Service (e.g. Gmail) -> copy its Service ID below
-  // 3. Create TWO templates and copy their Template IDs below:
-  //    - "notification" template: sent TO YOU, include {{full_name}} {{email}} {{phone}}
-  //      {{company}} {{automate}} {{budget}} {{message}} in the template body,
-  //      and set the template's "To email" field to your own inbox.
-  //    - "autoreply" template: sent TO THE VISITOR, set the template's
-  //      "To email" field to {{email}}, write a short thank-you message.
-  // 4. Account -> General -> copy your Public Key below.
-  const EMAILJS_PUBLIC_KEY   = "LMOhxIfo6HwtSjdUL";
-  const EMAILJS_SERVICE_ID   = "service_gbg8kcq";
-  const EMAILJS_NOTIFY_TEMPLATE   = "template_m4omqev";
-  const EMAILJS_AUTOREPLY_TEMPLATE = "template_gti2isw";
-
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
-
-  const form = document.getElementById('leadForm');
-  const thankYou = document.getElementById('thankYou');
-  const submitBtn = document.getElementById('submitBtn');
-  const formStatus = document.getElementById('formStatus');
-  const submitBtnOriginalText = submitBtn.textContent;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    formStatus.style.display = 'none';
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
-
-    const params = {
-      full_name: document.getElementById('fullName').value,
-      email: document.getElementById('email').value,
-      phone: document.getElementById('phone').value,
-      company: document.getElementById('company').value,
-      automate: document.getElementById('automate').value,
-      budget: document.getElementById('budget').value,
-      message: document.getElementById('message').value
-    };
-
-    Promise.all([
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NOTIFY_TEMPLATE, params),
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_AUTOREPLY_TEMPLATE, params)
-    ])
-    .then(() => {
-      form.classList.add('fade-out');
-      setTimeout(() => {
-        form.classList.add('hide-fields');
-        thankYou.classList.add('show');
-        thankYou.scrollIntoView({behavior:'smooth', block:'center'});
-      }, 300);
-    })
-    .catch((err) => {
-      console.error('EmailJS error:', err);
-      formStatus.textContent = "Something went wrong sending your message. Please email us directly at hello@nidaaiagency.com.";
-      formStatus.style.display = 'block';
-    })
-    .finally(() => {
-      submitBtn.disabled = false;
-      submitBtn.textContent = submitBtnOriginalText;
-    });
-  });
-
-  // Page load fade-in
-  document.body.style.opacity = '0';
-  document.body.style.transition = 'opacity .4s ease';
-  window.addEventListener('load', () => {
-    document.body.style.opacity = '1';
-  });
+  }
 </script>
-
 </body>
 </html>
