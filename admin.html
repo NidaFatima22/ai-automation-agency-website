@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Nida AI Agency Leads</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,600;0,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --paper:#F8F6F1;
+    --paper-dim:#EFEAE0;
+    --ink:#171426;
+    --ink-soft:#5A5570;
+    --line:#E4DFD2;
+    --teal:#6C4CE8;
+    --teal-dark:#5539D6;
+    --amber:#FF6F5E;
+    --dark:#100C1E;
+    --dark-2:#191430;
+    --ff-display:'Fraunces', serif;
+    --ff-body:'Inter', sans-serif;
+    --ff-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; font-family:var(--ff-body); color:var(--ink); background:var(--paper);}
+  h1,h2,h3{font-family:var(--ff-display); margin:0; letter-spacing:-0.02em;}
+
+  /* ===== Login gate ===== */
+  #loginScreen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:var(--dark); padding:20px;
+  }
+  .login-card{
+    background:var(--paper); border-radius:20px; padding:40px 36px;
+    max-width:380px; width:100%; box-shadow:0 30px 70px rgba(0,0,0,.35);
+  }
+  .login-card h1{font-size:22px; margin-bottom:6px;}
+  .login-card p{color:var(--ink-soft); font-size:14px; margin:0 0 24px;}
+  .login-card input{
+    width:100%; font-family:var(--ff-body); font-size:15px; padding:12px 14px;
+    border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink);
+    margin-bottom:14px;
+  }
+  .login-card input:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal);}
+  .login-card button{
+    width:100%; font-family:var(--ff-body); font-weight:600; font-size:15px;
+    padding:13px 24px; border-radius:999px; border:none; cursor:pointer;
+    background:var(--teal); color:#fff; transition:background .15s ease;
+  }
+  .login-card button:hover{background:var(--teal-dark);}
+  .login-error{color:#B3261E; font-size:13px; margin:10px 0 0; display:none;}
+
+  /* ===== Dashboard layout ===== */
+  #dashboard{display:none; min-height:100vh;}
+  .layout{display:flex; min-height:100vh;}
+
+  .sidebar{
+    width:230px; flex-shrink:0; background:var(--dark); color:#fff;
+    padding:26px 20px; display:flex; flex-direction:column; gap:6px;
+  }
+  .sidebar .brand{
+    font-family:var(--ff-display); font-size:18px; font-weight:700;
+    margin-bottom:28px; display:flex; align-items:center; gap:8px;
+  }
+  .sidebar .brand span{color:rgba(255,255,255,.5); font-weight:500; font-size:.8em;}
+  .sidebar nav a{
+    display:block; padding:10px 12px; border-radius:8px; color:rgba(255,255,255,.7);
+    text-decoration:none; font-size:14px; font-weight:500; margin-bottom:2px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .sidebar nav a.active, .sidebar nav a:hover{background:rgba(255,255,255,.08); color:#fff;}
+  .sidebar .logout{
+    margin-top:auto; background:none; border:1px solid rgba(255,255,255,.2); color:rgba(255,255,255,.7);
+    padding:10px 12px; border-radius:8px; cursor:pointer; font-family:var(--ff-body); font-size:13.5px;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .sidebar .logout:hover{border-color:#fff; color:#fff;}
+
+  .main{flex:1; padding:32px 36px; overflow-x:hidden;}
+  .main-head{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px; margin-bottom:26px;}
+  .main-head h1{font-size:26px;}
+  .main-head p{color:var(--ink-soft); font-size:14px; margin-top:4px;}
+  .btn{
+    font-family:var(--ff-body); font-weight:600; font-size:13.5px; padding:10px 18px;
+    border-radius:999px; border:1px solid var(--line); background:#fff; color:var(--ink);
+    cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:border-color .15s ease;
+  }
+  .btn:hover{border-color:var(--teal);}
+  .btn-primary{background:var(--teal); color:#fff; border-color:var(--teal);}
+  .btn-primary:hover{background:var(--teal-dark); border-color:var(--teal-dark);}
+
+  /* Stats */
+  .stats-row{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;}
+  .stat-card{
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px;
+  }
+  .stat-card .label{font-family:var(--ff-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft);}
+  .stat-card .value{font-family:var(--ff-display); font-size:32px; margin-top:6px;}
+  @media (max-width:720px){.stats-row{grid-template-columns:1fr;}}
+
+  /* Chart */
+  .chart-card{
+    background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px;
+    margin-bottom:28px;
+  }
+  .chart-card h3{font-size:15px; margin-bottom:16px;}
+  .bar-chart{display:flex; align-items:flex-end; gap:10px; height:140px;}
+  .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; height:100%; justify-content:flex-end;}
+  .bar{width:100%; max-width:34px; background:linear-gradient(180deg, var(--teal), var(--teal-dark)); border-radius:6px 6px 0 0; min-height:2px;}
+  .bar-col .day-label{font-size:11px; color:var(--ink-soft); font-family:var(--ff-mono);}
+  .bar-col .day-count{font-size:12px; font-weight:600;}
+
+  /* Table */
+  .table-card{background:#fff; border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  thead th{
+    text-align:left; padding:14px 16px; background:var(--paper-dim); font-family:var(--ff-mono);
+    font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft);
+    border-bottom:1px solid var(--line); white-space:nowrap;
+  }
+  tbody td{padding:14px 16px; border-bottom:1px solid var(--line); vertical-align:top;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--paper-dim);}
+  .msg-cell{max-width:220px; white-space:normal; color:var(--ink-soft);}
+  .table-scroll{overflow-x:auto;}
+  .empty-state{padding:60px 20px; text-align:center; color:var(--ink-soft);}
+  .loading-state{padding:60px 20px; text-align:center; color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>Admin access</h1>
+    <p>Enter the password to view leads.</p>
+    <input type="password" id="passwordInput" placeholder="Password" autocomplete="off">
+    <button id="loginBtn">Enter</button>
+    <p class="login-error" id="loginError">Incorrect password. Try again.</p>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="dashboard">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">Nida <span>AI Agency</span></div>
+      <nav>
+        <a href="#" class="active">Leads</a>
+      </nav>
+      <button class="logout" id="logoutBtn">Log out</button>
+    </aside>
+
+    <main class="main">
+      <div class="main-head">
+        <div>
+          <h1>Leads</h1>
+          <p>All contact form submissions from the website.</p>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn" id="refreshBtn">Refresh</button>
+          <button class="btn btn-primary" id="csvBtn">Download CSV</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="label">Total leads</div>
+          <div class="value" id="statTotal">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Last 7 days</div>
+          <div class="value" id="statWeek">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Last 30 days</div>
+          <div class="value" id="statMonth">—</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Leads per day — last 7 days</h3>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Company</th>
+                <th>Automate</th>
+                <th>Budget</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody id="leadsBody">
+              <tr><td colspan="8" class="loading-state">Loading leads…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+  // ===== Supabase setup =====
+  const SUPABASE_URL = "https://sevjwxcqckzzrywgnhhg.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_K3aGEzlYRC7bS2HuCHek8w_KYDBdHTY";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+  // ===== Simple password gate =====
+  // NOTE: this is a basic deterrent, not real security — anyone who reads
+  // the page source can see the password. Good enough for an internal/demo
+  // dashboard, not for protecting sensitive data long-term.
+  const ADMIN_PASSWORD = "admin123";
+
+  const loginScreen = document.getElementById('loginScreen');
+  const dashboard = document.getElementById('dashboard');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginError = document.getElementById('loginError');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  function showDashboard() {
+    loginScreen.style.display = 'none';
+    dashboard.style.display = 'block';
+    loadLeads();
+  }
+
+  function tryLogin() {
+    if (passwordInput.value === ADMIN_PASSWORD) {
+      sessionStorage.setItem('nida_admin_ok', '1');
+      showDashboard();
+    } else {
+      loginError.style.display = 'block';
+    }
+  }
+
+  loginBtn.addEventListener('click', tryLogin);
+  passwordInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') tryLogin();
+  });
+  logoutBtn.addEventListener('click', () => {
+    sessionStorage.removeItem('nida_admin_ok');
+    dashboard.style.display = 'none';
+    loginScreen.style.display = 'flex';
+    passwordInput.value = '';
+  });
+
+  // Stay logged in for the current browser tab session only.
+  if (sessionStorage.getItem('nida_admin_ok') === '1') {
+    showDashboard();
+  }
+
+  // ===== Load + render leads =====
+  let currentLeads = [];
+
+  async function loadLeads() {
+    const tbody = document.getElementById('leadsBody');
+    tbody.innerHTML = '<tr><td colspan="8" class="loading-state">Loading leads…</td></tr>';
+
+    const { data, error } = await supabaseClient
+      .from('leads')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Supabase fetch error:', error);
+      tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Couldn\'t load leads. Check the console for details.</td></tr>';
+      return;
+    }
+
+    currentLeads = data || [];
+    renderStats(currentLeads);
+    renderChart(currentLeads);
+    renderTable(currentLeads);
+  }
+
+  function renderStats(leads) {
+    const now = new Date();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    const weekCount = leads.filter(l => new Date(l.created_at) >= sevenDaysAgo).length;
+    const monthCount = leads.filter(l => new Date(l.created_at) >= thirtyDaysAgo).length;
+
+    document.getElementById('statTotal').textContent = leads.length;
+    document.getElementById('statWeek').textContent = weekCount;
+    document.getElementById('statMonth').textContent = monthCount;
+  }
+
+  function renderChart(leads) {
+    const barChart = document.getElementById('barChart');
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      days.push(d);
+    }
+
+    const counts = days.map(day => {
+      return leads.filter(l => {
+        const created = new Date(l.created_at);
+        return created.toDateString() === day.toDateString();
+      }).length;
+    });
+
+    const max = Math.max(...counts, 1);
+    barChart.innerHTML = '';
+    days.forEach((day, i) => {
+      const col = document.createElement('div');
+      col.className = 'bar-col';
+      const heightPct = Math.max((counts[i] / max) * 100, counts[i] > 0 ? 6 : 2);
+      col.innerHTML = `
+        <div class="day-count">${counts[i]}</div>
+        <div class="bar" style="height:${heightPct}%"></div>
+        <div class="day-label">${day.toLocaleDateString(undefined, { weekday: 'short' })}</div>
+      `;
+      barChart.appendChild(col);
+    });
+  }
+
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function renderTable(leads) {
+    const tbody = document.getElementById('leadsBody');
+    if (leads.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No leads yet — they\'ll show up here as soon as someone submits the contact form.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = leads.map(lead => {
+      const date = new Date(lead.created_at).toLocaleDateString(undefined, {
+        day: '2-digit', month: 'short', year: 'numeric'
+      });
+      return `
+        <tr>
+          <td>${date}</td>
+          <td>${escapeHtml(lead.full_name)}</td>
+          <td>${escapeHtml(lead.email)}</td>
+          <td>${escapeHtml(lead.phone)}</td>
+          <td>${escapeHtml(lead.company)}</td>
+          <td>${escapeHtml(lead.automation_type)}</td>
+          <td>${escapeHtml(lead.budget)}</td>
+          <td class="msg-cell">${escapeHtml(lead.message)}</td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', loadLeads);
+
+  // ===== CSV export =====
+  function downloadCSV() {
+    if (currentLeads.length === 0) {
+      alert('No leads to export yet.');
+      return;
+    }
+    const headers = ['Date', 'Full Name', 'Email', 'Phone', 'Company', 'Automation Type', 'Budget', 'Message'];
+    const rows = currentLeads.map(lead => [
+      new Date(lead.created_at).toISOString(),
+      lead.full_name,
+      lead.email,
+      lead.phone,
+      lead.company,
+      lead.automation_type,
+      lead.budget,
+      lead.message
+    ]);
+
+    function csvEscape(val) {
+      const s = (val === null || val === undefined) ? '' : String(val);
+      if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    }
+
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(csvEscape).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `nida-ai-agency-leads-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById('csvBtn').addEventListener('click', downloadCSV);
+</script>
+
+</body>
+</html>
