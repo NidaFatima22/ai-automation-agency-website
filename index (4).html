@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nida AI Agency — Automate the busywork. Scale the outcomes.</title>
+<meta name="description" content="Nida AI Agency helps businesses automate repetitive work with custom AI workflows, chatbots, and integrations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --paper:#F8F6F1;
+    --paper-dim:#EFEAE0;
+    --ink:#171426;
+    --ink-soft:#5A5570;
+    --line:#E4DFD2;
+    --teal:#6C4CE8;
+    --teal-dark:#5539D6;
+    --amber:#FF6F5E;
+    --gold:#F0B429;
+    --dark:#100C1E;
+    --dark-2:#191430;
+    --radius:14px;
+    --maxw:1120px;
+    --ff-display:'Fraunces', serif;
+    --ff-body:'Inter', sans-serif;
+    --ff-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  body{margin:0; font-family:var(--ff-body); color:var(--ink); background:var(--paper); line-height:1.55;}
+  h1,h2,h3{font-family:var(--ff-display); margin:0; letter-spacing:-0.02em;}
+  .eyebrow{font-family:var(--ff-mono); font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--teal-dark); display:inline-flex; align-items:center; gap:8px;}
+  .eyebrow::before{content:""; width:7px;height:7px;border-radius:50%; background:var(--amber); display:inline-block;}
+  a{color:inherit;}
+  img,svg{display:block; max-width:100%;}
+  .wrap{max-width:var(--maxw); margin:0 auto; padding:0 24px;}
+  .btn{font-family:var(--ff-body); font-weight:600; font-size:15px; padding:13px 24px; border-radius:999px; border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center; gap:8px; transition:transform .15s ease, box-shadow .15s ease, background .15s ease;}
+  .btn:focus-visible{outline:3px solid var(--amber); outline-offset:2px;}
+  .btn-primary{background:var(--teal); color:#fff;}
+  .btn-primary:hover{background:var(--teal-dark); transform:translateY(-1px); box-shadow:0 0 24px rgba(108,76,232,.4);}
+  .btn-ghost{background:transparent; color:var(--ink); border-color:var(--line);}
+  .btn-ghost:hover{border-color:var(--ink);}
+  .btn-dark{background:var(--dark); color:#fff;}
+  .btn-dark:hover{transform:translateY(-1px); box-shadow:0 8px 24px rgba(0,0,0,.25);}
+
+  header{position:sticky; top:0; z-index:50; background:rgba(248,246,241,0.88); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); transition:box-shadow .25s ease;}
+  header.scrolled{box-shadow:0 4px 20px rgba(15,10,30,.08);}
+  nav{display:flex; align-items:center; justify-content:space-between; padding:16px 0; transition:padding .25s ease;}
+  header.scrolled nav{padding:10px 0;}
+  .scroll-progress{position:fixed; top:0; left:0; height:3px; background:linear-gradient(90deg, var(--teal), var(--amber)); z-index:100; width:0%; transition:width .1s linear;}
+  .logo{font-family:var(--ff-display); font-size:19px; display:flex; align-items:center; gap:9px; text-decoration:none;}
+  .logo-primary{font-weight:700; color:var(--ink);}
+  .logo-secondary{font-weight:500; color:var(--ink-soft); letter-spacing:.02em; font-size:.85em;}
+  .logo-mark{width:26px; height:26px; border-radius:7px; background:var(--dark); flex-shrink:0; padding:1px;}
+  header .logo{cursor:pointer;}
+  header .logo .logo-mark{transition:transform .25s cubic-bezier(.34,1.56,.64,1);}
+  header .logo:hover .logo-mark{transform:scale(1.08) rotate(4deg);}
+  header .logo .logo-secondary{transition:color .2s ease;}
+  header .logo:hover .logo-secondary{color:var(--teal);}
+  .nav-links{display:flex; gap:30px; list-style:none; margin:0; padding:0; font-size:14.5px; font-weight:500;}
+  .nav-links a{text-decoration:none; color:var(--ink-soft); transition:color .15s; position:relative;}
+  .nav-links a::after{content:""; position:absolute; left:0; bottom:-4px; width:0; height:2px; background:var(--teal); transition:width .2s ease;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a:hover::after{width:100%;}
+  .nav-cta{display:flex; align-items:center; gap:18px;}
+  .nav-toggle{display:none; background:none; border:none; cursor:pointer; padding:6px;}
+  .nav-toggle span{display:block; width:22px; height:2px; background:var(--ink); margin:5px 0;}
+
+  @media (max-width:820px){
+    .nav-links{position:fixed; inset:64px 0 auto 0; background:var(--paper); flex-direction:column; padding:20px 24px; gap:18px; border-bottom:1px solid var(--line); transform:translateY(-130%); transition:transform .25s ease;}
+    .nav-links.open{transform:translateY(0);}
+    .nav-toggle{display:block;}
+    .nav-cta .btn-ghost{display:none;}
+  }
+
+  .hero{padding:96px 0 76px; position:relative; overflow:hidden; background:linear-gradient(180deg, var(--paper) 85%, var(--paper-dim) 100%);}
+  .hero::before, .hero::after{content:""; position:absolute; border-radius:50%; filter:blur(70px); z-index:0; pointer-events:none;}
+  .hero::before{width:420px; height:420px; background:rgba(108,76,232,.2); top:-160px; right:-120px; animation:blobFloat1 9s ease-in-out infinite;}
+  .hero::after{width:320px; height:320px; background:rgba(255,111,94,.18); bottom:-140px; left:-100px; animation:blobFloat2 11s ease-in-out infinite;}
+  @keyframes blobFloat1{0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-30px,30px) scale(1.12);}}
+  @keyframes blobFloat2{0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(30px,-20px) scale(1.15);}}
+  @media (prefers-reduced-motion: reduce){.hero::before, .hero::after{animation:none;}}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center; position:relative; z-index:1;}
+  .hero h1{font-size:clamp(34px, 5vw, 56px); line-height:1.06; margin:18px 0 20px;}
+  .hl{color:var(--teal); font-style:italic;}
+  .hero p.sub{font-size:18px; color:var(--ink-soft); max-width:480px; margin:0 0 30px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap; margin-bottom:36px;}
+  .hero-proof{display:flex; gap:12px; flex-wrap:wrap;}
+  .hero-proof div{font-family:var(--ff-mono); font-size:12.5px; color:var(--ink-soft); background:#fff; border:1px solid var(--line); border-radius:12px; padding:10px 16px;}
+  .hero-proof b{color:var(--ink); font-family:var(--ff-body); font-weight:700; display:block; font-size:19px;}
+
+  @keyframes heroIn{from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:translateY(0);}}
+  .hero-eyebrow-in{animation:heroIn .6s ease-out .1s forwards; opacity:0;}
+  .hero-h1-in{animation:heroIn .6s ease-out .25s forwards; opacity:0;}
+  .hero-sub-in{animation:heroIn .6s ease-out .4s forwards; opacity:0;}
+  .hero-actions-in{animation:heroIn .6s ease-out .55s forwards; opacity:0;}
+  .hero-proof-in{animation:heroIn .6s ease-out .7s forwards; opacity:0;}
+
+  .flow-card{background:var(--dark); border-radius:20px; padding:30px 26px; position:relative; color:#fff; min-height:380px;}
+  .flow-card .flow-label{font-family:var(--ff-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:#B8A8FF; margin-bottom:22px; display:block;}
+  .flow-steps{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0;}
+  .flow-steps li{display:flex; align-items:center; gap:14px; padding:14px 0; position:relative;}
+  .flow-steps li:not(:last-child)::after{content:""; position:absolute; left:15px; top:38px; bottom:-6px; width:1px; background:repeating-linear-gradient(to bottom, rgba(255,255,255,.35) 0 4px, transparent 4px 8px);}
+  .flow-dot{width:31px; height:31px; border-radius:50%; background:var(--dark-2); border:1px solid rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font-family:var(--ff-mono); font-size:12px; flex-shrink:0; z-index:1;}
+  .flow-steps li.active .flow-dot{background:var(--teal); border-color:var(--teal);}
+  .flow-steps li.done .flow-dot{background:var(--amber); border-color:var(--amber); color:var(--dark);}
+  .flow-text{font-size:14.5px;}
+  .flow-text small{display:block; color:rgba(255,255,255,.5); font-size:12px; margin-top:2px;}
+  .flow-pulse{position:absolute; width:9px; height:9px; border-radius:50%; background:var(--amber); left:11px; animation:pulseMove 3.6s ease-in-out infinite; box-shadow:0 0 0 5px rgba(255,111,94,.18);}
+  @keyframes pulseMove{0%{top:24px; opacity:0;} 8%{opacity:1;} 92%{opacity:1;} 100%{top:calc(100% - 40px); opacity:0;}}
+
+  @keyframes flowBorderGlow{0%, 100%{box-shadow:0 0 0 1px var(--teal), 0 8px 32px rgba(108,76,232,.16);} 50%{box-shadow:0 0 0 1px var(--amber), 0 8px 32px rgba(255,111,94,.16);}}
+  @keyframes dotGlowActive{0%, 100%{box-shadow:0 0 0 0 rgba(108,76,232,.45);} 50%{box-shadow:0 0 0 10px rgba(108,76,232,0);}}
+  .hero .flow-card{border:none; background-color:var(--dark); background-image:radial-gradient(circle, rgba(255,255,255,.05) 1px, transparent 1px); background-size:20px 20px; animation:flowCardIn .65s cubic-bezier(.22,1,.36,1) forwards, flowBorderGlow 6s ease-in-out 1.2s infinite;}
+  .hero .flow-card .flow-steps li.done .flow-dot{background:var(--amber); border-color:var(--amber); color:var(--dark); box-shadow:0 0 14px rgba(255,111,94,.4);}
+  .hero .flow-card .flow-steps li.active .flow-dot{background:var(--teal); border-color:var(--teal); animation:dotGlowActive 2s ease-in-out infinite;}
+
+  @keyframes flowStepIn{from{opacity:0; transform:translateX(20px);} to{opacity:1; transform:translateX(0);}}
+  @keyframes flowCardIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+  .hero .flow-card .flow-label, .hero .flow-card .flow-steps li{opacity:0; animation:flowStepIn .55s cubic-bezier(.22,1,.36,1) forwards;}
+  .hero .flow-card .flow-label{animation-delay:.15s;}
+  .hero .flow-card .flow-steps li:nth-child(1){animation-delay:.3s;}
+  .hero .flow-card .flow-steps li:nth-child(2){animation-delay:.48s;}
+  .hero .flow-card .flow-steps li:nth-child(3){animation-delay:.66s;}
+  .hero .flow-card .flow-steps li:nth-child(4){animation-delay:.84s;}
+  .hero .flow-card .flow-steps li:nth-child(5){animation-delay:1.02s;}
+  .hero .flow-card .flow-pulse{opacity:0; animation:pulseMove 3.6s ease-in-out 1.2s infinite;}
+
+  @media (max-width:900px){.hero-grid{grid-template-columns:1fr;} .flow-card{order:-1;}}
+
+  .reveal{opacity:0; transform:translateY(24px); transition:opacity .6s ease-out, transform .6s ease-out;}
+  .reveal.revealed{opacity:1; transform:translateY(0);}
+  .service-card.revealed:hover{transform:translateY(-6px);}
+
+  .reveal-card{opacity:0; transform:translateY(30px) scale(.96); transition:opacity .6s ease-out, transform .6s ease-out;}
+  .reveal-card.revealed{opacity:1; transform:translateY(0) scale(1);}
+  .reveal-card.revealed:hover{transform:translateY(-6px) scale(1);}
+
+  .reveal-stat{opacity:0; transform:scale(.85); transition:opacity .5s cubic-bezier(.34,1.56,.64,1), transform .5s cubic-bezier(.34,1.56,.64,1);}
+  .reveal-stat.revealed{opacity:1; transform:scale(1);}
+  .reveal-stat-1{transition-delay:0s;}
+  .reveal-stat-2{transition-delay:.08s;}
+  .reveal-stat-3{transition-delay:.16s;}
+  .reveal-stat-4{transition-delay:.24s;}
+
+  .reveal-right{opacity:0; transform:translateX(40px); transition:opacity .6s ease-out, transform .6s ease-out;}
+  .reveal-right.revealed{opacity:1; transform:translateX(0);}
+
+  .reveal-faq{opacity:0; transform:translateY(20px); transition:opacity .5s ease-out, transform .5s ease-out;}
+  .reveal-faq.revealed{opacity:1; transform:translateY(0);}
+  .reveal-faq-1{transition-delay:0s;}
+  .reveal-faq-2{transition-delay:.08s;}
+  .reveal-faq-3{transition-delay:.16s;}
+  .reveal-faq-4{transition-delay:.24s;}
+  .reveal-faq-5{transition-delay:.32s;}
+
+  .reveal-cta{opacity:0; transform:scale(.95); transition:opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);}
+  .reveal-cta.revealed{opacity:1; transform:scale(1);}
+  @keyframes ctaPulse{0%, 100%{box-shadow:0 0 0 0 rgba(255,111,94,.4);} 50%{box-shadow:0 0 0 14px rgba(255,111,94,0);}}
+  .reveal-cta.revealed .cta-pulse-btn{animation:ctaPulse 2s ease-in-out .7s infinite;}
+  .cta-pulse-btn{animation:ctaPulse 2.2s ease-in-out 1s infinite;}
+  .cta-pulse-btn:hover{animation-play-state:paused;}
+
+  .reveal-left{opacity:0; transform:translateX(-30px); transition:opacity .6s ease-out, transform .6s ease-out;}
+  .reveal-left.revealed{opacity:1; transform:translateX(0);}
+  .reveal-form{opacity:0; transform:translateX(30px) scale(.98); transition:opacity .6s ease-out, transform .6s ease-out;}
+  .reveal-form.revealed{opacity:1; transform:translateX(0) scale(1);}
+
+  section{padding:104px 0;}
+  section[id]{scroll-margin-top:90px;}
+  .section-divider{width:60px; height:2px; background:var(--amber); border-radius:2px; margin:40px auto;}
+  .section-head{max-width:600px; margin-bottom:52px;}
+  .section-head h2{font-size:clamp(26px,3.4vw,40px); margin-top:14px;}
+  .section-head p{color:var(--ink-soft); font-size:16.5px; margin-top:12px;}
+  @media (max-width:820px){section{padding:84px 0;}}
+
+  .services{background:var(--paper-dim); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .service-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:20px;}
+  .service-card{background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:28px 22px 26px; position:relative; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;}
+  .service-card::before{content:""; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--teal), var(--amber)); transform:scaleX(0); transform-origin:left; transition:transform .3s ease;}
+  .service-card:hover::before{transform:scaleX(1);}
+  .service-card:hover{transform:translateY(-6px); box-shadow:0 18px 34px rgba(23,20,38,.1); border-color:var(--teal);}
+  .service-index{font-family:var(--ff-mono); font-size:11px; color:var(--ink-soft); position:absolute; top:18px; right:20px; letter-spacing:.06em;}
+  .service-icon{width:46px; height:46px; border-radius:12px; background:linear-gradient(135deg, var(--teal), var(--teal-dark)); color:#fff; display:flex; align-items:center; justify-content:center; margin-bottom:20px;}
+  .service-icon svg{width:22px; height:22px;}
+  .service-card h3{font-size:17.5px; margin-bottom:8px;}
+  .service-card p{color:var(--ink-soft); font-size:14.5px; margin:0;}
+  @media (max-width:900px){.service-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.service-grid{grid-template-columns:1fr;}}
+
+  .about-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:center;}
+  .about-grid-full{display:block;}
+  .about-grid-full .about-stats{grid-template-columns:repeat(4,1fr);}
+  @media (max-width:820px){.about-grid-full .about-stats{grid-template-columns:1fr 1fr;}}
+  @media (max-width:480px){.about-grid-full .about-stats{grid-template-columns:1fr;}}
+  .about-stats{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:28px;}
+  .stat{border:1px solid var(--line); border-radius:14px; padding:20px; background:#fff; display:flex; align-items:center; gap:14px;}
+  .stat-icon{width:36px; height:36px; border-radius:10px; flex-shrink:0; background:var(--paper-dim); color:var(--teal); display:flex; align-items:center; justify-content:center;}
+  .stat-icon svg{width:18px; height:18px;}
+  .stat b{font-family:var(--ff-display); font-size:24px; display:block; color:var(--ink);}
+  .stat span{font-size:12.5px; color:var(--ink-soft);}
+  .about-copy p{color:var(--ink-soft); font-size:16.5px;}
+  @media (max-width:820px){.about-grid{grid-template-columns:1fr;}}
+  @media (max-width:480px){.about-stats{grid-template-columns:1fr;}}
+
+  .faq{background:var(--paper-dim); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .faq-list{max-width:760px;}
+  .faq-item{border:1px solid var(--line); border-radius:12px; margin-bottom:10px; background:var(--paper); transition:border-color .2s ease;}
+  .faq-item.open{border-color:var(--teal);}
+  .faq-q{width:100%; text-align:left; background:none; border:none; cursor:pointer; padding:19px 20px; display:flex; justify-content:space-between; align-items:center; gap:16px; font-family:var(--ff-display); font-size:16.5px; font-weight:600; color:var(--ink); border-radius:12px; transition:background .2s ease;}
+  .faq-q:hover{background:var(--paper-dim);}
+  .faq-q:focus-visible{outline:3px solid var(--amber);}
+  .faq-q .plus{font-family:var(--ff-mono); font-size:15px; color:#fff; flex-shrink:0; width:26px; height:26px; border-radius:50%; background:var(--teal); display:flex; align-items:center; justify-content:center; transition:transform .3s cubic-bezier(.34,1.56,.64,1), background .2s ease;}
+  .faq-item.open .faq-q .plus{transform:rotate(45deg); background:var(--amber);}
+  .faq-a{max-height:0; overflow:hidden; transition:max-height .35s cubic-bezier(.4,0,.2,1);}
+  .faq-a p{margin:0 20px 20px; color:var(--ink-soft); font-size:15px; max-width:640px;}
+
+  .cta-band{background:var(--dark); color:#fff; text-align:center; border-radius:24px; padding:70px 32px; margin:0 24px; max-width:calc(var(--maxw) - 0px); margin-left:auto; margin-right:auto; position:relative; overflow:hidden;}
+  .cta-band::before{content:""; position:absolute; inset:0; background-image:radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px); background-size:22px 22px; pointer-events:none;}
+  .cta-band::after{content:""; position:absolute; width:360px; height:360px; border-radius:50%; background:radial-gradient(circle, rgba(108,76,232,.35), transparent 70%); top:-160px; left:50%; transform:translateX(-50%); filter:blur(10px); pointer-events:none;}
+  .cta-band > *{position:relative; z-index:1;}
+  .cta-band .eyebrow{color:#B8A8FF;}
+  .cta-band .eyebrow::before{background:var(--amber);}
+  .cta-band h2{font-size:clamp(26px,4vw,40px); color:#fff; margin:16px 0 10px;}
+  .cta-band p{color:rgba(255,255,255,.65); max-width:460px; margin:0 auto 30px; font-size:16px;}
+  .cta-actions{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+  .contact-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:56px;}
+  .contact-info h2{font-size:clamp(26px,3.4vw,38px);}
+  .contact-info p{color:var(--ink-soft); margin-top:14px; font-size:16px;}
+  .contact-list{list-style:none; margin:28px 0 0; padding:0; display:flex; flex-direction:column; gap:16px;}
+  .contact-list li{display:flex; gap:14px; align-items:center; font-size:14.5px; color:var(--ink-soft);}
+  .contact-icon{width:36px; height:36px; border-radius:10px; flex-shrink:0; background:var(--paper-dim); color:var(--teal); display:flex; align-items:center; justify-content:center;}
+  .contact-icon svg{width:17px; height:17px;}
+  .contact-list b{display:block; color:var(--ink); font-family:var(--ff-body); font-size:14.5px; font-weight:600;}
+
+  form{background:#fff; border:1px solid var(--line); border-radius:20px; padding:32px; box-shadow:0 20px 50px rgba(23,20,38,.06);}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;}
+  .field{display:flex; flex-direction:column; gap:6px;}
+  .field.full{grid-column:1/-1;}
+  label{font-size:13px; font-weight:600; color:var(--ink);}
+  input, select, textarea{font-family:var(--ff-body); font-size:15px; padding:12px 14px; border:1px solid var(--line); border-radius:10px; background:var(--paper); color:var(--ink); transition:box-shadow .2s ease, border-color .2s ease;}
+  input:focus, select:focus, textarea:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal); box-shadow:0 0 0 4px rgba(108,76,232,.15);}
+  textarea{resize:vertical; min-height:90px;}
+  form .btn{width:100%; justify-content:center; margin-top:6px; font-size:16px; padding:14px;}
+  @media (max-width:820px){.contact-grid{grid-template-columns:1fr;} .field-row{grid-template-columns:1fr;}}
+
+  .spinner{width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; display:inline-block; animation:spin .6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .thankyou{display:none; text-align:center; padding:30px 10px; opacity:0; transform:translateY(10px); transition:opacity .3s ease, transform .3s ease;}
+  .thankyou.show{display:block; opacity:1; transform:translateY(0);}
+  #leadForm{transition:opacity .3s ease, transform .3s ease;}
+  #leadForm.fade-out{opacity:0; transform:scale(.98);}
+  form.hide-fields{display:none;}
+  .thankyou .service-icon{margin:0 auto 16px; background:linear-gradient(135deg, var(--teal), var(--teal-dark));}
+
+  footer{background:var(--dark); color:rgba(255,255,255,.7); padding:56px 0 28px; margin-top:20px;}
+  .footer-top{display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:36px; padding-bottom:36px; border-bottom:1px solid rgba(255,255,255,.1);}
+  .footer-brand p{font-size:14px; color:rgba(255,255,255,.55); margin-top:14px; max-width:260px;}
+  .footer-brand .logo-primary{color:#fff;}
+  .footer-brand .logo-secondary{color:rgba(255,255,255,.55);}
+  .footer-col h4{font-family:var(--ff-mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:14px; font-weight:500;}
+  .footer-col ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .footer-col a{text-decoration:none; font-size:14.5px; color:rgba(255,255,255,.75); transition:color .15s;}
+  .footer-col a:hover{color:#fff;}
+  .footer-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding-top:24px;}
+  footer .footer-row p{color:rgba(255,255,255,.45); font-size:13px; margin:0;}
+  .footer-social{display:flex; gap:12px;}
+  .footer-social a{width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; transition:background .2s ease;}
+  .footer-social a:hover{background:var(--teal);}
+  .footer-social svg{width:15px; height:15px;}
+  @media (max-width:820px){.footer-top{grid-template-columns:1fr 1fr; row-gap:28px;}}
+  @media (max-width:480px){.footer-top{grid-template-columns:1fr;}}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-track{background:var(--paper-dim);}
+  ::-webkit-scrollbar-thumb{background:var(--teal); border-radius:4px;}
+  html{scrollbar-color:var(--teal) var(--paper-dim);}
+
+  .audit-modal-overlay{position:fixed; inset:0; background:rgba(16,12,30,.55); display:flex; align-items:center; justify-content:center; padding:20px; z-index:200; opacity:0; pointer-events:none; transition:opacity .2s ease;}
+  .audit-modal-overlay.open{opacity:1; pointer-events:auto;}
+  .audit-modal{background:var(--paper); border-radius:20px; padding:32px; max-width:440px; width:100%; position:relative; box-shadow:0 30px 70px rgba(16,12,30,.35); transform:translateY(14px) scale(.97); transition:transform .25s cubic-bezier(.22,1,.36,1);}
+  .audit-modal-overlay.open .audit-modal{transform:translateY(0) scale(1);}
+  .audit-modal h3{font-size:22px; margin:10px 0 20px;}
+  .audit-modal-close{position:absolute; top:16px; right:16px; background:none; border:none; cursor:pointer; font-size:15px; color:var(--ink-soft); width:32px; height:32px; border-radius:50%; transition:background .15s ease;}
+  .audit-modal-close:hover{background:var(--paper-dim); color:var(--ink);}
+  .audit-steps{list-style:none; margin:0 0 24px; padding:0; display:flex; flex-direction:column; gap:16px;}
+  .audit-steps li{display:flex; gap:14px; align-items:flex-start;}
+  .audit-step-num{width:28px; height:28px; border-radius:50%; flex-shrink:0; background:var(--teal); color:#fff; font-family:var(--ff-mono); font-size:13px; font-weight:600; display:flex; align-items:center; justify-content:center; margin-top:1px;}
+  .audit-steps b{font-size:15px; display:block; margin-bottom:3px;}
+  .audit-steps p{margin:0; font-size:13.5px; color:var(--ink-soft); line-height:1.45;}
+  @media (max-width:480px){.audit-modal{padding:26px 22px;}}
+
+  #backToTop{position:fixed; bottom:24px; right:24px; z-index:60; width:48px; height:48px; border-radius:50%; background:var(--teal); color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(108,76,232,.35); opacity:0; pointer-events:none; transition:opacity .3s ease, transform .2s ease; font-size:18px;}
+  #backToTop.visible{opacity:1; pointer-events:auto;}
+  #backToTop:hover{transform:translateY(-2px);}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<header>
+  <nav class="wrap">
+    <a href="#top" class="logo"><svg class="logo-mark" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 5v14" stroke="rgba(255,255,255,.92)" stroke-width="2.5" stroke-linecap="round"/><path d="M7 5l10 14" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round"/><path d="M17 5v14" stroke="rgba(255,255,255,.92)" stroke-width="2.5" stroke-linecap="round"/></svg><span class="logo-primary">Nida</span> <span class="logo-secondary">AI Agency</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-ghost">Get a quote</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow hero-eyebrow-in">AI Automation Agency</span>
+        <h1 class="hero-h1-in">Automate the busywork.<br><span class="hl">Scale</span> the outcomes.</h1>
+        <p class="sub hero-sub-in">We design and build AI workflows, chatbots, and integrations that take repetitive work off your team's plate — so you can focus on growth, not admin.</p>
+        <div class="hero-actions hero-actions-in">
+          <a href="#contact" class="btn btn-primary cta-pulse-btn js-audit-cta">Book a free audit</a>
+          <a href="#services" class="btn btn-ghost">See what we automate</a>
+        </div>
+        <div class="hero-proof hero-proof-in">
+          <div><b>40+ hrs</b>saved per client / month</div>
+          <div><b>4–7 days</b>average build time</div>
+          <div><b>24/7</b>always-on automations</div>
+        </div>
+      </div>
+
+      <div class="flow-card" aria-hidden="true">
+        <span class="flow-label">// live automation preview</span>
+        <ul class="flow-steps">
+          <li class="done"><span class="flow-dot">✓</span><div class="flow-text">Lead submits form<small>Website contact form</small></div></li>
+          <li class="active"><span class="flow-dot">✓</span><div class="flow-text">AI qualifies the lead<small>Scores intent &amp; budget</small></div></li>
+          <li><span class="flow-dot">3</span><div class="flow-text">Auto-reply sent<small>Personalized in under 10s</small></div></li>
+          <li><span class="flow-dot">4</span><div class="flow-text">Synced to CRM<small>No manual data entry</small></div></li>
+          <li><span class="flow-dot">5</span><div class="flow-text">Team notified<small>Slack + email alert</small></div></li>
+        </ul>
+        <div class="flow-pulse"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="services" id="services">
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">What we do</span>
+        <h2>Four ways we take work off your plate</h2>
+        <p>Every engagement starts with mapping where your team's time actually goes — then we automate it.</p>
+      </div>
+      <div class="service-grid">
+        <div class="service-card reveal-card">
+          <span class="service-index">01</span>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+          <h3>Workflow Automation</h3>
+          <p>We connect your tools so data, approvals, and follow-ups move on their own — no more copy-pasting between apps.</p>
+        </div>
+        <div class="service-card reveal-card" style="transition-delay:.1s;">
+          <span class="service-index">02</span>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>Chatbot Building</h3>
+          <p>Custom AI chatbots that answer customer questions, qualify leads, and hand off to your team only when it matters.</p>
+        </div>
+        <div class="service-card reveal-card" style="transition-delay:.2s;">
+          <span class="service-index">03</span>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></div>
+          <h3>AI Integration</h3>
+          <p>We embed AI directly into the tools you already use — your CRM, inbox, or internal dashboards — so it fits your workflow.</p>
+        </div>
+        <div class="service-card reveal-card" style="transition-delay:.3s;">
+          <span class="service-index">04</span>
+          <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></div>
+          <h3>Lead Generation Automation</h3>
+          <p>From first click to qualified lead in your inbox — automated capture, scoring, and follow-up that never sleeps.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="wrap about-grid-full">
+      <div class="about-copy reveal" style="text-align:center; max-width:760px; margin:0 auto;">
+        <span class="eyebrow" style="justify-content:center;">About us</span>
+        <h2 style="margin-top:14px; font-size:clamp(28px,4vw,42px);">We build the systems, <span class="hl">not just the advice.</span></h2>
+        <p style="max-width:640px; margin:16px auto 0;">Nida AI Agency helps small and mid-sized businesses put AI to work on the tasks that quietly eat up their week. We don't hand you a strategy deck — we design, build, and hand over working automations, chatbots, and integrations tailored to how your team already operates. No bloated software, no long onboarding — just fewer repetitive tasks and more time for the work that actually needs a human.</p>
+        <div class="about-stats">
+          <div class="stat reveal-stat reveal-stat-1">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div><b>15+</b><span>Businesses automated</span></div>
+          </div>
+          <div class="stat reveal-stat reveal-stat-2">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div><b>4–7 days</b><span>Typical turnaround</span></div>
+          </div>
+          <div class="stat reveal-stat reveal-stat-3">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/></svg></div>
+            <div><b>3</b><span>Core tools you keep using</span></div>
+          </div>
+          <div class="stat reveal-stat reveal-stat-4">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div><b>100%</b><span>Built around your workflow</span></div>
+          </div>
+        </div>
+        <div style="margin-top:36px;">
+          <a href="#contact" class="btn btn-primary cta-pulse-btn js-audit-cta">Book your free audit</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Questions</span>
+        <h2>Before you reach out</h2>
+      </div>
+      <div class="faq-list" id="faqList">
+        <div class="faq-item open reveal-faq reveal-faq-1">
+          <button class="faq-q" aria-expanded="true">How long does a typical project take? <span class="plus">+</span></button>
+          <div class="faq-a" style="max-height:200px;"><p>Most workflow automations and chatbots are live within 4–7 days. Larger integrations with multiple systems can take 2–3 weeks — we'll give you a clear timeline after the first call.</p></div>
+        </div>
+        <div class="faq-item reveal-faq reveal-faq-2">
+          <button class="faq-q" aria-expanded="false">Do we need technical staff to maintain this? <span class="plus">+</span></button>
+          <div class="faq-a"><p>No. We build automations to run on their own, and we hand over simple documentation so your team can make small changes without touching code.</p></div>
+        </div>
+        <div class="faq-item reveal-faq reveal-faq-3">
+          <button class="faq-q" aria-expanded="false">What tools do you work with? <span class="plus">+</span></button>
+          <div class="faq-a"><p>We integrate with the tools you already use — common CRMs, spreadsheets, email platforms, and messaging apps like WhatsApp and Slack — rather than asking you to switch.</p></div>
+        </div>
+        <div class="faq-item reveal-faq reveal-faq-4">
+          <button class="faq-q" aria-expanded="false">How much does it cost? <span class="plus">+</span></button>
+          <div class="faq-a"><p>Pricing depends on scope — a single chatbot costs less than a full multi-system integration. Tell us what you want to automate on the call and we'll give you a fixed quote.</p></div>
+        </div>
+        <div class="faq-item reveal-faq reveal-faq-5">
+          <button class="faq-q" aria-expanded="false">What if the automation breaks or needs a change later? <span class="plus">+</span></button>
+          <div class="faq-a"><p>Every project includes a support window after launch, and ongoing maintenance plans are available if you'd rather we handle changes for you.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="cta-band reveal-cta">
+      <span class="eyebrow">Ready when you are</span>
+      <h2>Let's automate your first workflow.</h2>
+      <p>Book a free 20-minute audit — we'll show you exactly where AI can save your team time this month.</p>
+      <div class="cta-actions">
+        <a href="#contact" class="btn btn-dark cta-pulse-btn js-audit-cta" style="background:var(--amber); color:#fff;">Book your free audit</a>
+        <a href="#services" class="btn btn-ghost" style="border-color:rgba(255,255,255,.25); color:#fff;">See our services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-divider" aria-hidden="true"></div>
+    <div class="wrap contact-grid">
+      <div class="contact-info reveal-left">
+        <span class="eyebrow">Get in touch</span>
+        <h2>Tell us what's eating your team's time.</h2>
+        <p>Fill out the form and we'll get back to you within one business day with next steps.</p>
+        <ul class="contact-list">
+          <li><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg></span><span><b>Email</b>hello@nidaaiagency.com</span></li>
+          <li><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span><span><b>Response</b>Within 1 business day</span></li>
+          <li><span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span><b>Based in</b>Pakistan — working with clients worldwide</span></li>
+        </ul>
+      </div>
+
+      <div>
+        <form id="leadForm" class="reveal-form">
+          <div class="field-row">
+            <div class="field">
+              <label for="fullName">Full name</label>
+              <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div class="field">
+              <label for="email">Email address</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="phone">Phone number</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="field">
+              <label for="company">Company name</label>
+              <input type="text" id="company" name="company">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field full">
+              <label for="automate">What do you want to automate?</label>
+              <select id="automate" name="automate">
+                <option>Workflow automation</option>
+                <option>Chatbot building</option>
+                <option>AI integration</option>
+                <option>Lead generation automation</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field full">
+              <label for="budget">Budget range (optional)</label>
+              <select id="budget" name="budget">
+                <option value="">Prefer not to say</option>
+                <option>Under $500</option>
+                <option>$500 – $2,000</option>
+                <option>$2,000 – $5,000</option>
+                <option>$5,000+</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field full">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us a bit about your team and what's taking up the most time..."></textarea>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Send message</button>
+          <p id="formStatus" style="display:none; color:#B3261E; font-size:13.5px; margin:10px 2px 0;"></p>
+        </form>
+        <div class="thankyou" id="thankYou">
+          <div class="service-icon">✓</div>
+          <h3 style="font-size:20px; margin-bottom:8px;">Thanks — message received.</h3>
+          <p style="color:var(--ink-soft); font-size:15px;">We'll get back to you within one business day. Talk soon.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#top" class="logo"><svg class="logo-mark" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M7 5v14" stroke="rgba(255,255,255,.92)" stroke-width="2.5" stroke-linecap="round"/><path d="M7 5l10 14" stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round"/><path d="M17 5v14" stroke="rgba(255,255,255,.92)" stroke-width="2.5" stroke-linecap="round"/></svg><span class="logo-primary">Nida</span> <span class="logo-secondary">AI Agency</span></a>
+        <p>We design and build AI workflows, chatbots, and integrations that take repetitive work off your team's plate.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Workflow Automation</a></li>
+          <li><a href="#services">Chatbot Building</a></li>
+          <li><a href="#services">AI Integration</a></li>
+          <li><a href="#services">Lead Generation</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:hello@nidaaiagency.com">hello@nidaaiagency.com</a></li>
+          <li><a href="#contact" class="js-audit-cta">Book a free audit</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-row reveal">
+      <p>© 2026 Nida AI Agency. All rights reserved.</p>
+      <div class="footer-social">
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 4l-14 16M4 4l14 16"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="audit-modal-overlay" id="auditModalOverlay">
+  <div class="audit-modal" role="dialog" aria-modal="true" aria-labelledby="auditModalTitle">
+    <button class="audit-modal-close" id="auditModalClose" aria-label="Close">✕</button>
+    <span class="eyebrow">How booking works</span>
+    <h3 id="auditModalTitle">Your free audit in 3 steps</h3>
+    <ul class="audit-steps">
+      <li>
+        <span class="audit-step-num">1</span>
+        <div>
+          <b>Tell us about your business</b>
+          <p>60-second form — what you do and what's eating your team's time.</p>
+        </div>
+      </li>
+      <li>
+        <span class="audit-step-num">2</span>
+        <div>
+          <b>We review it</b>
+          <p>We look at your workflow and reply within 1 business day.</p>
+        </div>
+      </li>
+      <li>
+        <span class="audit-step-num">3</span>
+        <div>
+          <b>Free 20-minute audit call</b>
+          <p>We show you exactly where AI can save your team time — no pitch, just a plan.</p>
+        </div>
+      </li>
+    </ul>
+    <button class="btn btn-primary" id="auditModalContinue" style="width:100%; justify-content:center;">Start — fill the form</button>
+  </div>
+</div>
+
+<button id="backToTop" aria-label="Back to top">↑</button>
+
+<script>
+  // "Book your free audit" CTAs open a quick 3-step process modal first,
+  // then continue down to the form and focus its first field.
+  const auditOverlay = document.getElementById('auditModalOverlay');
+  const auditClose = document.getElementById('auditModalClose');
+  const auditContinue = document.getElementById('auditModalContinue');
+
+  function openAuditModal(e) {
+    e.preventDefault();
+    auditOverlay.classList.add('open');
+  }
+  function closeAuditModal() {
+    auditOverlay.classList.remove('open');
+  }
+  function goToForm() {
+    closeAuditModal();
+    document.getElementById('contact').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => {
+      const nameField = document.getElementById('fullName');
+      if (nameField) nameField.focus({ preventScroll: true });
+    }, 500);
+  }
+
+  document.querySelectorAll('.js-audit-cta').forEach(link => {
+    link.addEventListener('click', openAuditModal);
+  });
+  auditClose.addEventListener('click', closeAuditModal);
+  auditContinue.addEventListener('click', goToForm);
+  auditOverlay.addEventListener('click', (e) => {
+    if (e.target === auditOverlay) closeAuditModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && auditOverlay.classList.contains('open')) closeAuditModal();
+  });
+
+  // Other #contact links (nav "Get a quote", footer links, etc.) still jump
+  // straight to the form and focus it.
+  document.querySelectorAll('a[href="#contact"]:not(.js-audit-cta)').forEach(link => {
+    link.addEventListener('click', () => {
+      setTimeout(() => {
+        const nameField = document.getElementById('fullName');
+        if (nameField) nameField.focus({ preventScroll: true });
+      }, 500);
+    });
+  });
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', 'false');
+  }));
+
+  // Header scroll state + progress bar + back to top
+  const header = document.querySelector('header');
+  const scrollProgress = document.getElementById('scrollProgress');
+  const backToTop = document.getElementById('backToTop');
+
+  function onScroll() {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+    scrollProgress.style.width = pct + '%';
+
+    backToTop.classList.toggle('visible', window.scrollY > 500);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Scroll reveal
+  const revealSelectors = '.reveal, .reveal-card, .reveal-stat, .reveal-right, .reveal-faq, .reveal-cta, .reveal-left, .reveal-form';
+  const revealEls = document.querySelectorAll(revealSelectors);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    revealEls.forEach(el => el.classList.add('revealed'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => revealObserver.observe(el));
+  }
+
+  // Animated counters for hero-proof and about-stats
+  function animateCount(el, target, suffix, duration) {
+    const start = performance.now();
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const value = Math.floor(progress * target);
+      el.textContent = value + suffix;
+      if (progress < 1) requestAnimationFrame(tick);
+      else el.textContent = target + suffix;
+    }
+    requestAnimationFrame(tick);
+  }
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const heroProof = document.querySelector('.hero-proof');
+    if (heroProof) {
+      const firstStat = heroProof.querySelector('div:first-child b');
+      if (firstStat) {
+        setTimeout(() => animateCount(firstStat, 40, '+ hrs', 1200), 700);
+      }
+    }
+
+    const statObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const b = entry.target.querySelector('b');
+          const text = b.textContent.trim();
+          if (text === '15+') animateCount(b, 15, '+', 1200);
+          else if (text === '3') animateCount(b, 3, '', 1200);
+          else if (text === '100%') animateCount(b, 100, '%', 1200);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.about-stats .stat').forEach(el => statObserver.observe(el));
+  }
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    const btn = item.querySelector('.faq-q');
+    const answer = item.querySelector('.faq-a');
+    btn.addEventListener('click', () => {
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open');
+        i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        i.querySelector('.faq-a').style.maxHeight = null;
+      });
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // ===== Supabase setup =====
+  // Supabase Dashboard -> Settings -> API -> Project URL / Publishable key
+  const SUPABASE_URL = "https://sevjwxcqckzzrywgnhhg.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_K3aGEzlYRC7bS2HuCHek8w_KYDBdHTY";
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+  // ===== EmailJS setup =====
+  // 1. Create a free account at https://www.emailjs.com
+  // 2. Add an Email Service (e.g. Gmail) -> copy its Service ID below
+  // 3. Create TWO templates and copy their Template IDs below:
+  //    - "notification" template: sent TO YOU, include {{full_name}} {{email}} {{phone}}
+  //      {{company}} {{automate}} {{budget}} {{message}} in the template body,
+  //      and set the template's "To email" field to your own inbox.
+  //    - "autoreply" template: sent TO THE VISITOR, set the template's
+  //      "To email" field to {{email}}, write a short thank-you message.
+  // 4. Account -> General -> copy your Public Key below.
+  const EMAILJS_PUBLIC_KEY   = "LMOhxIfo6HwtSjdUL";
+  const EMAILJS_SERVICE_ID   = "service_gbg8kcq";
+  const EMAILJS_NOTIFY_TEMPLATE   = "template_m4omqev";
+  const EMAILJS_AUTOREPLY_TEMPLATE = "template_gti2isw";
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  const form = document.getElementById('leadForm');
+  const thankYou = document.getElementById('thankYou');
+  const submitBtn = document.getElementById('submitBtn');
+  const formStatus = document.getElementById('formStatus');
+  const submitBtnOriginalText = submitBtn.textContent;
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    formStatus.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Sending...';
+
+    const params = {
+      full_name: document.getElementById('fullName').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      company: document.getElementById('company').value,
+      automate: document.getElementById('automate').value,
+      budget: document.getElementById('budget').value,
+      message: document.getElementById('message').value
+    };
+
+    // 1) Save the lead into Supabase ("leads" table)
+    const leadRow = {
+      full_name: params.full_name,
+      email: params.email,
+      phone: params.phone,
+      company: params.company,
+      automation_type: params.automate,
+      budget: params.budget,
+      message: params.message
+    };
+
+    supabaseClient
+      .from('leads')
+      .insert([leadRow])
+      .then(({ error }) => {
+        if (error) {
+          // Saving to the database failed — don't show the success message.
+          console.error('Supabase insert error:', error);
+          formStatus.textContent = "Something went wrong saving your details. Please email us directly at hello@nidaaiagency.com.";
+          formStatus.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtnOriginalText;
+          return;
+        }
+
+        // 2) Lead saved successfully — also send the notification + autoreply emails.
+        Promise.all([
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_NOTIFY_TEMPLATE, params),
+          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_AUTOREPLY_TEMPLATE, params)
+        ])
+        .catch((err) => {
+          // Lead is already saved in Supabase, so don't block the success
+          // message just because an email failed — just log it.
+          console.error('EmailJS error:', err);
+        })
+        .finally(() => {
+          form.reset();
+          form.classList.add('fade-out');
+          setTimeout(() => {
+            form.classList.add('hide-fields');
+            thankYou.classList.add('show');
+            thankYou.scrollIntoView({behavior:'smooth', block:'center'});
+          }, 300);
+          submitBtn.disabled = false;
+          submitBtn.textContent = submitBtnOriginalText;
+        });
+      });
+  });
+
+  // Page load fade-in
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity .4s ease';
+  window.addEventListener('load', () => {
+    document.body.style.opacity = '1';
+  });
+</script>
+
+</body>
+</html>
